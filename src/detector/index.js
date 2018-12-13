@@ -405,26 +405,26 @@ function do_face_detection(cameraId,file_path,person_count,start_ts,tracking_inf
           }
     */
 
-      // 根据数学的Sampling 原则，我们计算一张图片的Embedding时，只需要确保其他的图片不要计算，而等着一张图片的都计算完
-      if(SAMPLING_TO_SAVE_ENERGY_MODE){
-        if(getEmbeddingInProcessingStatus(cameraId)){
-          console.log('Sampling mode, skip this frame since previous calcuation is in progress')
-
-          gifQueue.add({
-            person_count:person_count,
-            cameraId:cameraId,
-            current_tracker_id:current_tracker_id,
-            whole_file:whole_file,
-            name_sorting:false});
-          return
-        }
-      }
       var faces_to_be_recognited = getFaceRecognitionTaskList(cameraId,
         cropped_images,tracking_info,current_tracker_id)
       if (faces_to_be_recognited.length >0) {
+        // 根据数学的Sampling 原则，我们计算一张图片的Embedding时，只需要确保其他的图片不要计算，而等着一张图片的都计算完
+        if(SAMPLING_TO_SAVE_ENERGY_MODE){
+          if(getEmbeddingInProcessingStatus(cameraId)){
+            console.log('Sampling mode, skip this frame since previous calcuation is in progress, need delete images of faces')
+
+            gifQueue.add({
+              person_count:person_count,
+              cameraId:cameraId,
+              current_tracker_id:current_tracker_id,
+              whole_file:whole_file,
+              name_sorting:false});
+            return
+          }
+        }
         setEmbeddingInProcessingStatus(cameraId,true)
         deepeye.embedding(faces_to_be_recognited, current_tracker_id, function(err,results){
-          getEmbeddingInProcessingStatus(cameraId,false)
+          setEmbeddingInProcessingStatus(cameraId,false)
           timeline.update(current_tracker_id,'in_tracking',person_count,results)
 
           //save gif info
