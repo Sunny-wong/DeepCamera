@@ -59,7 +59,7 @@ services:
       CELERY_BROKER_URL: redis://redis/0
       CELERY_RESULT_BACKEND: redis://redis/0
   face_detector:
-    command: sh -c "cd /root/detection && python test.py && python worker.py worker --loglevel INFO -E -n detect -c 2 -Q detect"
+    command: sh -c "cd /root/detection && python test.py && python worker.py worker --loglevel INFO -E -n detect -c 1 -Q detect"
     image: deepeye3/face_detector:latest
     container_name: "face_detector"
     environment:
