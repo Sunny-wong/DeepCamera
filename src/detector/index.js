@@ -105,6 +105,7 @@ function checkAndNewCameraTrackerInfo(cameraId) {
                                    'old_ts': 0,
                                    'previous_face_detection_ts': null,
                                    'face_detect_in_processing': false,
+                                   'face_embedding_in_processing': false,
                                    'saved_faces_motion':0}
   }
   return true;
