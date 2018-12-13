@@ -21,29 +21,29 @@ var cameras_tracker = {}
 var REDIS_HOST = process.env.REDIS_HOST || "redis"
 var REDIS_PORT = process.env.REDIS_PORT || 6379
 
-function GetEnvironmentVar(varname, defaultvalue)
+function GetEnvironmentVarInt(varname, defaultvalue)
 {
     var result = process.env[varname];
     if(result!=undefined)
-        return result;
+        return parseInt(result,10);
     else
         return defaultvalue;
 }
 
 // DEEP_ANALYSIS_MODE true=允许队列缓存, false=不允许队列缓存
-var DEEP_ANALYSIS_MODE = GetEnvironmentVar('DEEP_ANALYSIS_MODE',true)
+var DEEP_ANALYSIS_MODE = GetEnvironmentVarInt('DEEP_ANALYSIS_MODE',1)
 // SAMPLING_TO_SAVE_ENERGY_MODE true，同一个Camera在进行Embedding计算的时候其他图片不再计算Embedding, false=关闭
-var SAMPLING_TO_SAVE_ENERGY_MODE = GetEnvironmentVar('SAMPLING_TO_SAVE_ENERGY_MODE',true)
+var SAMPLING_TO_SAVE_ENERGY_MODE = GetEnvironmentVarInt('SAMPLING_TO_SAVE_ENERGY_MODE',1)
 // RESTRICT_RECOGNITON_MODE true=只做正脸识别, false=侧脸和正脸都做识别
-var RESTRICT_RECOGNITON_MODE = GetEnvironmentVar('RESTRICT_RECOGNITON_MODE',true)
+var RESTRICT_RECOGNITON_MODE = GetEnvironmentVarInt('RESTRICT_RECOGNITON_MODE',1)
 // MINIMAL_FACE_RESOLUTION 定义脸最小分辨率
-var MINIMAL_FACE_RESOLUTION = GetEnvironmentVar('MINIMAL_FACE_RESOLUTION', 200)
+var MINIMAL_FACE_RESOLUTION = GetEnvironmentVarInt('MINIMAL_FACE_RESOLUTION', 200)
 // RECOGNITION_ENSURE_VALUE 定义数值为秒，秒数之内确保一次计算（有了SAMPLING_TO_SAVE_ENERGY_MODE之后，这个模式不怎么有用）
-var RECOGNITION_ENSURE_VALUE = GetEnvironmentVar('RECOGNITION_ENSURE_VALUE', 15)
+var RECOGNITION_ENSURE_VALUE = GetEnvironmentVarInt('RECOGNITION_ENSURE_VALUE', 15)
 // BIGGEST_FACE_ONLY_MODE 只计算最大脸模式，通常用于闸机系统，多算无意的模式，缺省关闭
-var BIGGEST_FACE_ONLY_MODE = GetEnvironmentVar('BIGGEST_FACE_ONLY_MODE', false)
+var BIGGEST_FACE_ONLY_MODE = GetEnvironmentVarInt('BIGGEST_FACE_ONLY_MODE', 0)
 // UPLOAD_IMAGE_SERVICE_ENABLED, true 打开minio上传监听，false 关闭minio上传监听
-var UPLOAD_IMAGE_SERVICE_ENABLED = GetEnvironmentVar('UPLOAD_IMAGE_SERVICE_ENABLED', false)
+var UPLOAD_IMAGE_SERVICE_ENABLED = GetEnvironmentVarInt('UPLOAD_IMAGE_SERVICE_ENABLED', 0)
 
 
 if(UPLOAD_IMAGE_SERVICE_ENABLED){
